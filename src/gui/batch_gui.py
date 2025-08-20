@@ -2013,31 +2013,66 @@ Format: {"{filename}_summary_ja.md"}
             
             self.log_message(f"📧 Sending batch completion email to {recipient_email}")
             
-            # Get list of processed files for proper file naming
-            output_dir = Path(self.output_directory.get()) / "processed"
+            # Get list of actually processed files from the results
             processed_files = []
+            task_results = results.get('task_results', [])
             
-            if output_dir.exists():
-                summary_files = list(output_dir.glob("*_summary_ja.md"))
-                for summary_file in summary_files:
-                    original_name = summary_file.stem.replace('_summary_ja', '')
-                    processed_files.append({
-                        'original_name': original_name,
-                        'summary_file': summary_file
-                    })
+            # Build processed files list from actual task results
+            for task_result in task_results:
+                if hasattr(task_result, 'success') and task_result.success:
+                    try:
+                        original_file_path = task_result.file_path
+                        original_name = original_file_path.stem
+                        
+                        # Find corresponding summary file in output directory
+                        output_dir = Path(self.output_directory.get()) / "processed"
+                        summary_file = output_dir / f"{original_name}_summary_ja.md"
+                        
+                        processed_files.append({
+                            'original_name': original_name,
+                            'original_path': original_file_path,
+                            'summary_file': summary_file if summary_file.exists() else None,
+                            'processing_time': getattr(task_result, 'processing_time', 0),
+                            'status': 'success'
+                        })
+                    except Exception as e:
+                        self.log_message(f"⚠️ Error processing task result: {e}")
+                        
+            # Also include failed files for comprehensive reporting
+            for task_result in task_results:
+                if hasattr(task_result, 'success') and not task_result.success:
+                    try:
+                        original_file_path = task_result.file_path
+                        original_name = original_file_path.stem
+                        error_msg = getattr(task_result, 'error', 'Unknown error')
+                        
+                        processed_files.append({
+                            'original_name': original_name,
+                            'original_path': original_file_path,
+                            'summary_file': None,
+                            'processing_time': getattr(task_result, 'processing_time', 0),
+                            'status': 'failed',
+                            'error': error_msg
+                        })
+                    except Exception as e:
+                        self.log_message(f"⚠️ Error processing failed task result: {e}")
             
-            # Use the first processed file name for email subject, or batch info if multiple
-            if len(processed_files) == 1:
-                main_file_name = processed_files[0]['original_name']
-                email_file_path = Path(f"{main_file_name}.pdf")  # Assume PDF for subject
+            self.log_message(f"📊 Email will include {len(processed_files)} files ({results.get('successful_files', 0)} successful, {results.get('failed_files', 0)} failed)")
+            
+            # Use the first successfully processed file name for email subject, or batch info if multiple
+            successful_files = [f for f in processed_files if f['status'] == 'success']
+            if len(successful_files) == 1:
+                main_file_name = successful_files[0]['original_name']
+                email_file_path = successful_files[0]['original_path']
             else:
-                main_file_name = f"Batch_{len(processed_files)}_files"
-                email_file_path = Path(f"Batch_{len(processed_files)}_files")
+                total_files = len(processed_files)
+                main_file_name = f"Batch_{total_files}_files_{results.get('successful_files', 0)}_success"
+                email_file_path = Path(f"Batch_{total_files}_files")
             
             # Create enhanced batch processing summary with actual file results
             batch_summary = self._create_enhanced_batch_summary_with_files(results, processed_files)
             
-            # Create processing metrics
+            # Create processing metrics with actual processed files
             processing_metrics = {
                 "total_files": results['total_files'],
                 "successful_files": results['successful_files'],
@@ -2046,7 +2081,9 @@ Format: {"{filename}_summary_ja.md"}
                 "processing_time": str(results['processing_time']),
                 "processing_type": "Enhanced Batch Processing",
                 "output_directory": str(self.output_directory.get()),
-                "processed_files": [f['original_name'] for f in processed_files]
+                "processed_files": [f['original_name'] for f in processed_files if f['status'] == 'success'],
+                "failed_files_list": [f['original_name'] for f in processed_files if f['status'] == 'failed'],
+                "session_id": results.get('session_id', 'unknown')
             }
             
             # Use enhanced email sender directly for better control

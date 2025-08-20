@@ -1,0 +1,13 @@
+batch_size: 3
+enable_translation: true
+include_metadata: true
+include_urls: true
+individual_processing: true
+language: ja
+max_length: null
+output_format: markdown
+preserve_formatting: true
+retry_count: 3
+summary_type: brief
+timeout: 300
+translation_chunk_size: 5000

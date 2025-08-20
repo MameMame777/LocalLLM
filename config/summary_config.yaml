@@ -1,0 +1,33 @@
+# LocalLLM 要約設定ファイル (YAML)
+# ======================================
+
+# 基本設定
+language: "ja"                    # 出力言語: "ja" (日本語), "en" (英語)
+summary_type: "brief"             # 要約タイプ: "brief" (簡潔), "detailed" (詳細), "academic" (学術的), "concise" (要点)
+
+# 出力設定
+output_format: "markdown"         # 出力形式: "markdown", "text", "html"
+max_length: null                  # 最大文字数制限 (null = 制限なし)
+
+# JSON処理設定
+individual_processing: true       # 個別URL処理を行う
+include_urls: true               # URL情報を要約に含める
+batch_size: 3                    # バッチ処理サイズ
+
+# 翻訳設定
+enable_translation: true         # 翻訳機能を有効化
+translation_chunk_size: 5000     # 翻訳時のチャンクサイズ
+
+# 品質設定
+retry_count: 3                   # エラー時のリトライ回数
+timeout: 300                     # タイムアウト (秒)
+
+# 詳細設定
+preserve_formatting: true        # 元のフォーマットを可能な限り保持
+include_metadata: true           # メタデータを要約に含める
+
+# カスタム設定例
+# summary_prompts:
+#   brief: "簡潔に要約してください"
+#   detailed: "詳細に分析し要約してください"
+#   academic: "学術的な観点から要約してください"

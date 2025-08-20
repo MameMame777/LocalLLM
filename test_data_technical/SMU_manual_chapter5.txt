@@ -1,0 +1,33 @@
+Model 2450 SourceMeter SMU Instrument
+User Manual - Chapter 5: Measurement Functions
+
+5.1 VOLTAGE MEASUREMENT
+The Model 2450 provides high-accuracy voltage measurements with the following specifications:
+• Measurement range: 200mV to 200V in 7 ranges
+• Resolution: 10nV to 100μV (depending on range)  
+• Accuracy: ±(0.012% + 300μV) on 200V range
+• Input impedance: >10GΩ on all ranges
+• NPLC settings: 0.01 to 10 (50/60Hz line cycles)
+
+5.1.1 Measurement Procedure
+To perform a voltage measurement:
+1. Connect the test leads to the DUT (Device Under Test)
+2. Select the appropriate measurement range
+3. Configure the measurement parameters (NPLC, averaging, etc.)
+4. Initiate the measurement using the MEASURE button
+
+5.2 CURRENT MEASUREMENT  
+High-precision current measurements with these capabilities:
+• Measurement range: 10nA to 1A in 7 ranges
+• Resolution: 1fA to 100nA (depending on range)
+• Accuracy: ±(0.05% + 200pA) on 1μA range
+• Burden voltage: <20μV on most sensitive range
+
+5.3 RESISTANCE MEASUREMENT
+Four-wire resistance measurements for maximum accuracy:
+• Range: 2Ω to 200MΩ  
+• Test current: 1μA to 1mA (automatically selected)
+• Accuracy: ±(0.05% + 1mΩ) on 2kΩ range
+
+CAUTION: Always ensure proper connection polarity to avoid 
+measurement errors or potential damage to the instrument.

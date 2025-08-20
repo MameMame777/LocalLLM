@@ -1,0 +1,42 @@
+AD7682/AD7689 16-Bit, 4-Channel/8-Channel Simultaneous Sampling ADCs
+
+GENERAL DESCRIPTION
+The AD7682 and AD7689 are 16-bit, charge redistribution successive approximation 
+analog-to-digital converters (ADCs) that operate from a single 2.5 V power supply 
+and feature throughput rates up to 250 kSPS.
+
+KEY FEATURES
+• 16-bit resolution with no missing codes
+• 4-channel (AD7682) and 8-channel (AD7689) simultaneous sampling
+• Single 2.5 V power supply operation
+• Low power consumption: 38 mW typical at 250 kSPS
+• SPI/QSPI/MICROWIRE/DSP compatible serial interface
+• Internal reference: 2.5 V, ±2 ppm/°C typical
+• Temperature range: −40°C to +125°C
+• 48-lead LFCSP and 48-lead LQFP packages
+
+APPLICATIONS
+• Medical instrumentation
+• Industrial process control
+• Automatic test equipment
+• Data acquisition systems
+• Spectrum analyzers
+
+FUNCTIONAL BLOCK DIAGRAM
+The AD7682/AD7689 contains 4/8 track-and-hold amplifiers, 4/8 successive 
+approximation ADCs, an internal reference, and SPI-compatible serial interface.
+
+PIN CONFIGURATION
+The device is available in 48-lead LFCSP and 48-lead LQFP packages.
+All digital inputs are CMOS/TTL compatible.
+
+SPECIFICATIONS
+DC SPECIFICATIONS (AVDD = 2.5V, fSAMPLE = 250kSPS, TA = 25°C)
+• Resolution: 16 bits
+• Integral nonlinearity: ±1 LSB typical, ±2 LSB maximum
+• Differential nonlinearity: ±0.5 LSB typical, ±1 LSB maximum
+• Offset error: ±2 LSB typical, ±8 LSB maximum
+• Gain error: ±2 LSB typical, ±8 LSB maximum
+• Signal-to-noise ratio: 91 dB typical
+• Total harmonic distortion: −103 dB typical
+• Spurious-free dynamic range: 103 dB typical

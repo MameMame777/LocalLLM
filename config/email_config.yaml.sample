@@ -1,0 +1,32 @@
+# Email Configuration Sample
+# Copy this file to email_config.yaml and fill in your actual credentials
+
+email:
+  enabled: false  # Set to true when configured
+  
+  # SMTP settings
+  smtp:
+    server: "smtp.gmail.com"
+    port: 587
+    use_tls: true
+  
+  # Sender information (replace with your credentials)
+  sender:
+    email: "your-gmail@gmail.com"    # Your Gmail address
+    password: "your-app-password"    # Gmail app password (not your regular password)
+  
+  # Default recipient
+  default_recipient: "recipient@example.com"
+  
+  # Content settings
+  content:
+    max_content_length: 5000
+    include_metrics: true
+    include_file_info: true
+
+# Setup Instructions:
+# 1. Copy this file to config/email_config.yaml
+# 2. Enable 2-factor authentication in your Gmail account
+# 3. Generate an app password: https://support.google.com/accounts/answer/185833
+# 4. Replace placeholder values with your actual credentials
+# 5. Set enabled: true when ready to use

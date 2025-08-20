@@ -1,0 +1,125 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Sensitive Configuration Files
+.env*
+!.env*.sample
+config/email_config.yaml
+!config/email_config.yaml.sample
+*.key
+*.pem
+secrets/
+log/
+
+# Output and Results (処理結果・出力ファイル)
+output/
+temp/
+cache/
+results/
+processed/
+reports/
+
+# 一時ファイル・キャッシュ
+*.tmp
+*.temp
+*.bak
+*.orig
+.cache/
+__pycache__/
+
+# Models (large files)
+models/*.gguf
+models/*.bin
+models/*.safetensors
+
+# Output files (except examples)
+# すべての出力ファイルをコミット対象外にする
+
+# Test files (development only)
+test_*.py
+*_test.py
+analyze_*.py
+check_*.py
+download_*.py
+create_*.py
+verify_*.py
+multilingual_*.py
+
+# Development/debugging files
+src/enhanced_mock_llm.py
+src/mock_summarizer.py
+
+# Reports (generated files)
+reports/
+*.html
+*.csv
+*.json
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Documentation build
+docs/_build/
+site/

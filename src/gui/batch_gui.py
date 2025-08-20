@@ -368,9 +368,15 @@ class BatchProcessingGUI:
                                 command=self.open_performance_monitor, style='Performance.TButton')
         perf_button.grid(row=0, column=1, padx=(5, 0))
         
+        # Email Config Button
+        email_button = ttk.Button(toolbar_frame, text="📧 Email Config", 
+                                 command=self.check_email_config, style='Email.TButton')
+        email_button.grid(row=0, column=2, padx=(5, 0))
+        
         # Configure custom button styles
         self.style.configure('API.TButton', foreground='#A23B72')
         self.style.configure('Performance.TButton', foreground='#F18F01')
+        self.style.configure('Email.TButton', foreground='#1F77B4')
         
     def toggle_api_server(self):
         """Toggle API server"""
@@ -441,6 +447,173 @@ class BatchProcessingGUI:
             
         except Exception as e:
             messagebox.showerror("エラー", f"Performance Monitor failed: {str(e)}")
+    
+    def check_email_config(self):
+        """Check and display email configuration status"""
+        try:
+            import os
+            import yaml
+            from dotenv import load_dotenv
+            from pathlib import Path
+            
+            # Create email config window
+            email_window = tk.Toplevel(self.root)
+            email_window.title("📧 Email Configuration Status")
+            email_window.geometry("600x500")
+            
+            # Email info display
+            info_text = scrolledtext.ScrolledText(email_window, wrap=tk.WORD)
+            info_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+            
+            info_text.insert(tk.END, "📧 Email Configuration Check\n")
+            info_text.insert(tk.END, "=" * 40 + "\n\n")
+            
+            # Check .env.email file
+            env_email_path = Path(".env.email")
+            if env_email_path.exists():
+                load_dotenv(env_email_path)
+                info_text.insert(tk.END, "✅ .env.email file found\n")
+                
+                sender_email = os.getenv("EMAIL_SENDER")
+                sender_password = os.getenv("EMAIL_PASSWORD")
+                recipient_email = os.getenv("NOTIFICATION_EMAIL")
+                
+                if sender_email:
+                    info_text.insert(tk.END, f"   📤 Sender: {sender_email}\n")
+                if sender_password:
+                    info_text.insert(tk.END, f"   🔑 Password: {'*' * len(sender_password)}\n")
+                if recipient_email:
+                    info_text.insert(tk.END, f"   📥 Recipient: {recipient_email}\n")
+                    
+                if sender_email and sender_password and recipient_email:
+                    info_text.insert(tk.END, "   ✅ All email credentials configured\n\n")
+                else:
+                    info_text.insert(tk.END, "   ⚠️ Missing email credentials\n\n")
+            else:
+                info_text.insert(tk.END, "❌ .env.email file not found\n\n")
+            
+            # Check config/email_config.yaml
+            config_path = Path("config/email_config.yaml")
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        email_config = yaml.safe_load(f)
+                    
+                    info_text.insert(tk.END, "✅ config/email_config.yaml found\n")
+                    
+                    email_settings = email_config.get('email', {})
+                    if email_settings.get('enabled', False):
+                        info_text.insert(tk.END, "   ✅ Email notifications enabled\n")
+                        
+                        sender_info = email_settings.get('sender', {})
+                        if sender_info.get('email'):
+                            info_text.insert(tk.END, f"   📤 Configured sender: {sender_info.get('email')}\n")
+                        if sender_info.get('password'):
+                            info_text.insert(tk.END, f"   🔑 Password configured: {'*' * len(sender_info.get('password', ''))}\n")
+                        if email_settings.get('default_recipient'):
+                            info_text.insert(tk.END, f"   📥 Default recipient: {email_settings.get('default_recipient')}\n")
+                    else:
+                        info_text.insert(tk.END, "   ⚠️ Email notifications disabled\n")
+                        
+                except Exception as e:
+                    info_text.insert(tk.END, f"   ❌ Error reading config: {e}\n")
+            else:
+                info_text.insert(tk.END, "❌ config/email_config.yaml not found\n\n")
+            
+            # Setup instructions
+            info_text.insert(tk.END, "\n📋 Setup Instructions:\n")
+            info_text.insert(tk.END, "-" * 25 + "\n")
+            info_text.insert(tk.END, "1. Copy .env.email.sample to .env.email\n")
+            info_text.insert(tk.END, "2. Copy config/email_config.yaml.sample to config/email_config.yaml\n")
+            info_text.insert(tk.END, "3. Configure your Gmail credentials:\n")
+            info_text.insert(tk.END, "   - Enable 2-factor authentication\n")
+            info_text.insert(tk.END, "   - Generate app password\n")
+            info_text.insert(tk.END, "   - Update configuration files\n")
+            info_text.insert(tk.END, "4. Set 'enabled: true' in email_config.yaml\n")
+            
+            # Test email button
+            test_frame = ttk.Frame(email_window)
+            test_frame.pack(fill=tk.X, padx=10, pady=(0, 10))
+            
+            ttk.Button(test_frame, text="🧪 Test Email Configuration", 
+                      command=self.test_email_configuration).pack(side=tk.LEFT, padx=(0, 5))
+            ttk.Button(test_frame, text="📁 Open Config Folder", 
+                      command=lambda: os.startfile("config")).pack(side=tk.LEFT)
+            
+            self.log_message("📧 Email Configuration window opened")
+            
+        except Exception as e:
+            messagebox.showerror("エラー", f"Email config check failed: {str(e)}")
+    
+    def test_email_configuration(self):
+        """Test email configuration by sending a test email"""
+        try:
+            import os
+            import yaml
+            from dotenv import load_dotenv
+            from pathlib import Path
+            
+            # Load configuration
+            env_email_path = Path(".env.email")
+            if env_email_path.exists():
+                load_dotenv(env_email_path)
+            
+            config_path = Path("config/email_config.yaml")
+            email_config = {}
+            if config_path.exists():
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    email_config = yaml.safe_load(f)
+            
+            # Get credentials
+            sender_email = os.getenv("EMAIL_SENDER")
+            sender_password = os.getenv("EMAIL_PASSWORD")
+            recipient_email = os.getenv("NOTIFICATION_EMAIL")
+            
+            # Try config file if env vars not found
+            if email_config and not (sender_email and sender_password and recipient_email):
+                email_settings = email_config.get('email', {})
+                if email_settings.get('enabled', False):
+                    sender_info = email_settings.get('sender', {})
+                    sender_email = sender_info.get('email')
+                    sender_password = sender_info.get('password')
+                    recipient_email = email_settings.get('default_recipient')
+            
+            if not (sender_email and sender_password and recipient_email):
+                messagebox.showerror("Configuration Error", 
+                                   "Email configuration incomplete. Please configure credentials first.")
+                return
+            
+            # Send test email
+            from src.utils.email_sender import send_processing_notification
+            
+            test_metrics = {
+                "test_type": "GUI Email Configuration Test",
+                "timestamp": str(datetime.now()),
+                "status": "success"
+            }
+            
+            success = send_processing_notification(
+                recipient_email=recipient_email,
+                file_path=Path("Email_Configuration_Test"),
+                summary_content="This is a test email from LocalLLM Batch GUI to verify email configuration is working correctly.",
+                processing_metrics=test_metrics,
+                sender_email=sender_email,
+                sender_password=sender_password
+            )
+            
+            if success:
+                messagebox.showinfo("Test Success", 
+                                  f"✅ Test email sent successfully to {recipient_email}")
+                self.log_message(f"✅ Test email sent successfully to {recipient_email}")
+            else:
+                messagebox.showerror("Test Failed", 
+                                   "❌ Failed to send test email. Please check your configuration.")
+                self.log_message("❌ Test email failed")
+                
+        except Exception as e:
+            messagebox.showerror("Test Error", f"Email test failed: {str(e)}")
+            self.log_message(f"❌ Email test error: {str(e)}")
+    
     
     def setup_config_tab(self):
         """Setup configuration tab"""
@@ -1793,20 +1966,49 @@ Format: {"{filename}_summary_ja.md"}
         """Send email notification for batch processing completion with individual file results"""
         try:
             import os
+            import yaml
             from dotenv import load_dotenv
             from src.utils.email_sender import EnhancedEmailSender
             from pathlib import Path
             
-            # Load environment variables
-            load_dotenv()
+            # Try to load from .env.email first, then fall back to .env
+            env_email_path = Path(".env.email")
+            if env_email_path.exists():
+                load_dotenv(env_email_path)
+                self.log_message("📧 Loading email configuration from .env.email")
+            else:
+                load_dotenv()  # Load from .env
+                self.log_message("📧 Loading email configuration from .env")
             
-            # Check if email is configured
+            # Try to load from config/email_config.yaml as well
+            config_path = Path("config/email_config.yaml")
+            email_config = {}
+            if config_path.exists():
+                try:
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        email_config = yaml.safe_load(f)
+                    self.log_message("📧 Email config file found and loaded")
+                except Exception as e:
+                    self.log_message(f"⚠️ Could not load email config: {e}")
+            
+            # Check if email is configured from environment variables
             recipient_email = os.getenv("NOTIFICATION_EMAIL")
-            sender_email = os.getenv("EMAIL_SENDER")
+            sender_email = os.getenv("EMAIL_SENDER") 
             sender_password = os.getenv("EMAIL_PASSWORD")
+            
+            # If not found in env vars, try from config file
+            if email_config and not (recipient_email and sender_email and sender_password):
+                email_settings = email_config.get('email', {})
+                if email_settings.get('enabled', False):
+                    sender_info = email_settings.get('sender', {})
+                    sender_email = sender_info.get('email')
+                    sender_password = sender_info.get('password')
+                    recipient_email = email_settings.get('default_recipient')
+                    self.log_message("📧 Using email configuration from config file")
             
             if not (recipient_email and sender_email and sender_password):
                 self.log_message("📧 Email notification not configured - skipping")
+                self.log_message("   Please configure email in .env.email or config/email_config.yaml")
                 return
             
             self.log_message(f"📧 Sending batch completion email to {recipient_email}")

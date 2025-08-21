@@ -448,3 +448,17 @@ MIT License
 - バグ報告: GitHub Issues
 - 機能要望: GitHub Issues
 - 質問: GitHub Discussions
+## 🔗 外部プロジェクトでの使用
+
+LocalLLMは他のPythonプロジェクトから簡単に利用できるように設計されています。
+
+### 📦 インストール方法
+
+\\\ash
+# GitHubから直接インストール（推奨）
+pip install git+https://github.com/MameMame777/LocalLLM.git
+\\\
+
+### 📚 詳細ガイド
+
+外部プロジェクトでの詳細な使用方法については、[外部統合ガイド](EXTERNAL_INTEGRATION_GUIDE.md)をご覧ください。

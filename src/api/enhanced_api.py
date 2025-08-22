@@ -189,12 +189,18 @@ def summarize_json(
             # 処理方法の選択
             if final_config.individual_processing and isinstance(json_data, list):
                 # 個別URL処理
-                from src.utils.individual_json_processor import IndividualJSONUrlProcessor
+                try:
+                    from ..utils.individual_json_processor import IndividualJSONUrlProcessor
+                except ImportError:
+                    from src.utils.individual_json_processor import IndividualJSONUrlProcessor
                 processor = IndividualJSONUrlProcessor()
                 result = processor.process_json_file_individually(json_file_path)
             else:
                 # 通常のファイル処理
-                from src.gui.enhanced_academic_processor import create_enhanced_academic_processing_function
+                try:
+                    from ..gui.enhanced_academic_processor import create_enhanced_academic_processing_function
+                except ImportError:
+                    from src.gui.enhanced_academic_processor import create_enhanced_academic_processing_function
                 process_func = create_enhanced_academic_processing_function()
                 
                 result = process_func(
@@ -270,7 +276,10 @@ def summarize_file_with_config(
             final_config.update(**kwargs)
         
         # ファイル処理
-        from src.gui.enhanced_academic_processor import create_enhanced_academic_processing_function
+        try:
+            from ..gui.enhanced_academic_processor import create_enhanced_academic_processing_function
+        except ImportError:
+            from src.gui.enhanced_academic_processor import create_enhanced_academic_processing_function
         process_func = create_enhanced_academic_processing_function()
         
         result = process_func(
@@ -348,7 +357,10 @@ def demo_enhanced_api():
 def _send_email_notification(result: str, config: SummaryConfig, file_path: Optional[Path]):
     """内部メール送信機能"""
     try:
-        from src.utils.email_sender import EmailSender
+        try:
+            from ..utils.email_sender import EmailSender
+        except ImportError:
+            from src.utils.email_sender import EmailSender
         
         # メール設定ファイルからの読み込み
         if config.email_config_file:
@@ -389,7 +401,10 @@ def _send_email_notification(result: str, config: SummaryConfig, file_path: Opti
         # 各受信者にメール送信
         for recipient in recipients:
             if recipient:  # 空でない場合のみ送信
-                from src.utils.email_sender import send_processing_notification
+                try:
+                    from ..utils.email_sender import send_processing_notification
+                except ImportError:
+                    from src.utils.email_sender import send_processing_notification
                 success = send_processing_notification(
                     recipient_email=recipient,
                     file_path=file_path or Path("API_Input"),

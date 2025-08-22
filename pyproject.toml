@@ -84,11 +84,12 @@ Repository = "https://github.com/MameMame777/LocalLLM.git"
 Issues = "https://github.com/MameMame777/LocalLLM/issues"
 Documentation = "https://github.com/MameMame777/LocalLLM/blob/master/README.md"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.setuptools]
+packages = ["localllm", "localllm.api", "localllm.gui", "localllm.utils", "localllm.academic", "localllm.batch_processing"]
+package-dir = {"localllm" = "src"}
 
 [tool.setuptools.package-data]
-localllm = ["config/*.yaml", "config/*.json", "config/*.py"]
+"localllm" = ["config/*.yaml", "config/*.json", "config/*.py"]
 
 [tool.black]
 line-length = 88
